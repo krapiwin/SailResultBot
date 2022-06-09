@@ -100,10 +100,14 @@ def show_results(update: Update, context: CallbackContext):
     results = regatta.create_results()
     results_str = (list(map(str, results)))
     m = ''
+    if regatta.name:
+        m = (f'{regatta.name}\n\n')
     i = 0
     for res in results_str:
         i += 1
         m += (f'{i}. {res}\n')
+    if regatta.name:
+        update.message.reply_text(regatta.name)
     update.message.reply_text(m)
     update.message.reply_text('Чтобы записать еще гонку нажмите /new_race')
     return RACE_CREATED
