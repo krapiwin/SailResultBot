@@ -1,9 +1,10 @@
 from pprint import pprint as pp
-from racer import Racer, sort_racers
+from racer import Racer
+from utils import sort_racers
 
 
 class Regatta:
-    def __init__(self, name, divider, exclude=0):
+    def __init__(self, name='', divider=',', exclude=0):
         self.name = name
         self.races = []
         self.races_dsq = []
@@ -11,11 +12,11 @@ class Regatta:
         self.divider = divider
         self.exclude = exclude
 
-    def get_dsq_points(self, mod, race):
-        if mod is None:
-            return(len(self.races[race]) + 1)
-        else:
-            return(len(self.participants) + 1)
+    def get_dsq_points(self) -> int:
+        '''
+        Получает очки за dsq. Количество участников + 1.
+        '''
+        return(len(self.participants) + 1)
 
     def create_race(self, race):
         race = race.split(self.divider)
@@ -35,9 +36,8 @@ class Regatta:
 
     def create_results(self):
         racers = self.participants
-
-        race_results = {}
         racer_objs = []
+        dsq_points = self.get_dsq_points()
 
         for racer in racers:
             racer_res = []
@@ -55,21 +55,41 @@ class Regatta:
                     continue
                 else:
                     racer_res.append('dnf')
-            racer_objs.append(Racer(racer, racer_res, self))
-            race_results[racer] = racer_res
-        return(sort_racers(racer_objs))
+
+            args = [racer, racer_res, self.exclude, dsq_points]
+            racer_objs.append(Racer(*args))
+
+        results = sort_racers(racer_objs)
+        return results
+
+
+def get_result_data(racers):
+    '''
+    Cюда планируется прикрутить PrettyTable.
+
+    либо pandas + tabulate
+    '''
+    data = []
+    for racer in racers:
+        line = [racer.name, racer.points] + racer.races_final
+        data.append(line)
+    pp(data)
+    return data
 
 
 def main():
-    regatta = Regatta('корпорат 3000', ' ')
-    n = int(input())
-    for _ in range(n):
-        regatta.create_race(input())
+    divider = ' '
+    exclude = 1
+    name = 'Чемпионат Вселенной'
 
-    regatta.exclude = 1
+    regatta = Regatta(name, divider, exclude)
+    regatta.create_race('р2 р27 р13 р18 р4 пл2-dsq пл1 пл4 р8 пл3')
+    regatta.create_race('р2 р18 пл2 р13 пл4 р8 р27 р4 р13')
+    regatta.create_race('пл4 р4 р27 пл2 пл1 р8 пл3')
 
     results = regatta.create_results()
-    pp(results)
+    results_str = (list(map(str, results)))
+    pp(results_str)
 
 
 if __name__ == "__main__":
