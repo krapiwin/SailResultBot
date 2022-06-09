@@ -1,6 +1,6 @@
 from pprint import pprint as pp
-from r import Racer
-from r import sort_racers
+from racer.py import Racer, sort_racers
+
 
 class Regatta:
     def __init__(self, name):
@@ -10,7 +10,7 @@ class Regatta:
         self.participants = set()
 
     def get_dsq_points(self, mod, race):
-        if mod == None:
+        if mod is None:
             return(len(self.races[race]) + 1)
         else:
             return(len(self.participants) + 1)
@@ -39,7 +39,7 @@ class Regatta:
 
         for racer in racers:
             racer_res = []
-            
+
             for i in range(len(self.races)):
                 race = self.races[i]
                 race_dsq = self.races_dsq[i]
@@ -57,6 +57,7 @@ class Regatta:
             race_results[racer] = racer_res
         return(sort_racers(racer_objs))
 
+
 def main():
     regatta = Regatta('корпорат 3000')
     n = int(input())
@@ -66,6 +67,7 @@ def main():
     results = regatta.create_results(exclude)
     print(regatta.name)
     pp(results)
+
 
 if __name__ == "__main__":
     main()
