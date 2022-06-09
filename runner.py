@@ -129,8 +129,8 @@ def main():
         entry_points=[CommandHandler('new_regatta', new_regatta)],
         states={
             NEW_NAME: [
-                MessageHandler(Filters.text, new_name),
-                CommandHandler('skip', skip_name)],
+                CommandHandler('skip', skip_name),
+                MessageHandler(Filters.text, new_name)],
             INPUT_RACE: [MessageHandler(Filters.text, input_race)],
             RACE_CREATED: [
                 CommandHandler('new_race', text_for_input),
