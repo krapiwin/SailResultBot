@@ -1,13 +1,15 @@
 from pprint import pprint as pp
-from racer.py import Racer, sort_racers
+from racer import Racer, sort_racers
 
 
 class Regatta:
-    def __init__(self, name):
+    def __init__(self, name, divider, exclude=0):
         self.name = name
         self.races = []
         self.races_dsq = []
         self.participants = set()
+        self.divider = divider
+        self.exclude = exclude
 
     def get_dsq_points(self, mod, race):
         if mod is None:
@@ -15,8 +17,8 @@ class Regatta:
         else:
             return(len(self.participants) + 1)
 
-    def create_race(self, race, ):
-        race = race.split(' ')
+    def create_race(self, race):
+        race = race.split(self.divider)
         race_dsq = {}
         race_finishers = []
 
@@ -31,7 +33,7 @@ class Regatta:
         self.races.append(race_finishers)
         self.races_dsq.append(race_dsq)
 
-    def create_results(self, exclude):
+    def create_results(self):
         racers = self.participants
 
         race_results = {}
@@ -53,19 +55,20 @@ class Regatta:
                     continue
                 else:
                     racer_res.append('dnf')
-            racer_objs.append(Racer(racer, racer_res, exclude, self))
+            racer_objs.append(Racer(racer, racer_res, self))
             race_results[racer] = racer_res
         return(sort_racers(racer_objs))
 
 
 def main():
-    regatta = Regatta('корпорат 3000')
+    regatta = Regatta('корпорат 3000', ' ')
     n = int(input())
     for _ in range(n):
         regatta.create_race(input())
-    exclude = 1
-    results = regatta.create_results(exclude)
-    print(regatta.name)
+
+    regatta.exclude = 1
+
+    results = regatta.create_results()
     pp(results)
 
 

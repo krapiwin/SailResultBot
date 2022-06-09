@@ -7,7 +7,8 @@ def last_race_getter(racer):
 
 
 class Racer:
-    def __init__(self, name, races, exclude, regatta):
+    def __init__(self, name, races, regatta):
+        exclude = regatta.exclude
         self.name = name
         self.regatta = regatta
         self.races_final = list(map(str, races))
@@ -16,7 +17,6 @@ class Racer:
             mod = self.races[i]
             if mod in {'dnf', 'ocs', 'dsq'}:
                 val = self.regatta.get_dsq_points(mod, i)
-                print(val)
                 self.races[i] = val
         self.races_sorted = sorted(self.races)
 
