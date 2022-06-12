@@ -98,13 +98,12 @@ def show_results(update: Update, context: CallbackContext):
     user = update.message.from_user
     regatta = memory[user.id]['regatta']
     results = regatta.create_results()
-    results_str = (list(map(str, results)))
-    m = ''
+    results_str = (map(str, results))
     if regatta.name:
         m = (f'{regatta.name}\n')
-    i = 0
-    for res in results_str:
-        i += 1
+    else:
+        m = ''
+    for i, res in enumerate(results_str, 1):
         m += (f'{i}. {res}\n')
     update.message.reply_text(m)
     update.message.reply_text('Чтобы записать еще гонку нажмите /new_race')

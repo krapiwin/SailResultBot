@@ -1,9 +1,13 @@
 from pprint import pprint as pp
+
 from racer import Racer
 from utils import sort_racers
 
 
 class Regatta:
+    DNF = 'dnf'
+    MOD_DIVIDER = '-'
+
     def __init__(self, name='', divider=',', exclude=0):
         self.name = name
         self.races = []
@@ -24,15 +28,15 @@ class Regatta:
         race_finishers = []
 
         for racer in race:
-            try:
-                racer, mod = (racer.split('-'))
-                race_dsq[racer] = mod
-            except ValueError:
-                race_finishers.append(racer)
-            self.participants.add(racer)
+            if self.MOD_DIVIDER in racer:
+                racer, mod = (racer.split(self.MOD_DIVIDER))
+                race_dsq[racer] = mod  # str to dict
+            else:
+                race_finishers.append(racer)  # str to list
+            self.participants.add(racer)  # str to set
 
-        self.races.append(race_finishers)
-        self.races_dsq.append(race_dsq)
+        self.races.append(race_finishers)  # list of lists
+        self.races_dsq.append(race_dsq)  # list of dicts
 
     def create_results(self):
         racers = self.participants
@@ -41,22 +45,17 @@ class Regatta:
 
         for racer in racers:
             racer_res = []
-
-            for i in range(len(self.races)):
-                race = self.races[i]
-                race_dsq = self.races_dsq[i]
+            for race, race_dsq in zip(self.races, self.races_dsq):
                 if racer in race:
                     result = (race.index(racer) + 1)
                     racer_res.append(result)
-                    continue
-                if racer in race_dsq:
+                elif racer in race_dsq:
                     dsq = race_dsq[racer]
                     racer_res.append(dsq)
-                    continue
                 else:
-                    racer_res.append('dnf')
+                    racer_res.append(self.DNF)
 
-            args = [racer, racer_res, self.exclude, dsq_points]
+            args = (racer, racer_res, self.exclude, dsq_points)
             racer_objs.append(Racer(*args))
 
         results = sort_racers(racer_objs)
@@ -71,7 +70,7 @@ def get_result_data(racers):
     '''
     data = []
     for racer in racers:
-        line = [racer.name, racer.points] + racer.races_final
+        line = [racer.name, racer.points] + racer.races_str
         data.append(line)
     pp(data)
     return data
