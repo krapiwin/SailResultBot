@@ -58,7 +58,7 @@ def new_name(update: Update, context: CallbackContext):
     user = update.message.from_user
     regatta = memory[user.id]['regatta']
     name = update.message.text
-    regatta.name = name
+    regatta.name = name.strip()
     update.message.reply_text(
         'Красивое имя!\n'
         'Можно вводить приходы первой гонки!'

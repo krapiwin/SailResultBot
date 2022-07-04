@@ -30,6 +30,7 @@ class Racer:
         self.name = name
         self.races_str = list(map(str, races))
         self.races = races
+        self.last_race = races[-1:]
         for i, race in enumerate(self.races):
             if race in self.MODS:
                 self.races[i] = dsq_points
@@ -62,3 +63,11 @@ class Racer:
         result = ' '.join(self.races_str)
         return(f"{self.name}: {self.points} {point}: " +
                f"{result}")
+
+    def __lt__(self, obj):
+        if self.points != obj.points:
+            return self.points < obj.points
+        elif self.races_sorted != obj.races_sorted:
+            return self.races_sorted < obj.races_sorted
+        print(f'{self.last_race=} {obj.last_race=}')
+        return self.last_race < obj.last_race

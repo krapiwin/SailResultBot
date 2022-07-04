@@ -1,12 +1,8 @@
 from operator import attrgetter
 
 
-def last_race_getter(racer):
-    return racer.races[-1:]
-
-
 def sort_racers(racers):
-    racers = sorted(racers, key=last_race_getter)
+    racers = sorted(racers, key=attrgetter('last_race'))
     racers = sorted(racers, key=attrgetter('races_sorted'))
     racers = sorted(racers, key=attrgetter('points'))
     return racers

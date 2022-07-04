@@ -1,7 +1,6 @@
 from pprint import pprint as pp
 
 from racer import Racer
-from utils import sort_racers
 
 
 class Regatta:
@@ -23,7 +22,9 @@ class Regatta:
         return(len(self.participants) + 1)
 
     def create_race(self, race):
-        race = race.split(self.divider)
+        def strip(input):
+            return input.strip()
+        race = map(strip, race.split(self.divider))
         race_dsq = {}
         race_finishers = []
 
@@ -58,7 +59,8 @@ class Regatta:
             args = (racer, racer_res, self.exclude, dsq_points)
             racer_objs.append(Racer(*args))
 
-        results = sort_racers(racer_objs)
+        # results = sort_racers(racer_objs)
+        results = racer_objs.sort()
         return results
 
 
